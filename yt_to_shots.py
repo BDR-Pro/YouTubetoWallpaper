@@ -8,6 +8,8 @@ from langdetect import detect_langs
 import arabic_reshaper
 from bidi.algorithm import get_display
 from random import randint
+import uuid
+
 
 def print_help():
     print('''
@@ -29,7 +31,6 @@ Examples:
     python yt_to_shots.py -u "uD4izuDMUQA"  -f 20 -m 500 -d
     python yt_to_shots.py -u "fW4cLkdPoCs" -s 30 -f 200 -m 500 -d
     python yt_to_shots.py -u "QSNa8U1yGrM" -s 50 -f 500 -m 100
-
 
 ''')
 
@@ -64,7 +65,8 @@ def get_images(video_path, output_folder, frame_skip, title):
         if not success or i >= 1000 * frame_skip:  # Limit to max_frames to prevent infinite loop
             break
         if i % frame_skip == 0:  # Only save frames based on the skip interval
-            file_ = os.path.join(folder, f"frame_{i//frame_skip:04d}.jpg")
+            unique_id = str(uuid.uuid4())
+            file_ = os.path.join(folder, f"frame_{i//frame_skip:04d}_{unique_id[:5]}.jpg")
             images.append(file_)
             cv2.imwrite(file_, frame)
         i += 1
