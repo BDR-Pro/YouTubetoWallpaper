@@ -27,7 +27,7 @@ Make sure your spaceship is equipped with the following:
 Hop on the terminal and run:
 
 ```sh
-pip install pytube opencv tqdm scikit-image langdetect arabic-reshaper python-bidi
+pip install yt-dlp pytube opencv tqdm scikit-image langdetect arabic-reshaper python-bidi
 ```
 
 ## Let's Get This Party Started! 🎉
