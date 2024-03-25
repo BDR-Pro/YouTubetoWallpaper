@@ -40,7 +40,7 @@ python yt_to_shots.py -u <URL/VideoID> [options]
 
 ### Cosmic Commands 🌙
 
-- `-u`, `--url` **(required)**: The YouTube video URL or VideoID. Where your journey begins! 🚀
+- `-u`, `--url` : The YouTube video URL or VideoID. Where your journey begins! 🚀
 - `-o`, `--output`: Where to store your interstellar captures. Defaults to your current starbase (folder). 📁
 - `-f`, `--frame`: How many frames to skip in your cosmic leap. More skips = faster travel! 🛸
 - `-m`, `--max`: Your cargo limit. How many frames to keep before you say "that's enough beauty for today". 📦
