@@ -9,6 +9,7 @@ from bidi.algorithm import get_display
 from random import randint
 import uuid
 import yt_dlp
+from bulk_fetcher import main as fetcher
 
 def download_video_and_get_title(url, output_path='videos/video.mp4'):
     """
@@ -76,6 +77,11 @@ Arguments:
     -m, --max     Enter the maximum number of frames to capture. Default is 1000.
     -d, --delete  Delete the downloaded video after processing.
     -s, --similar Enter the similarty percentage of frames to remove. Default is 50.
+    -t, --txt     Enter the path of the text file containing the list of URLs 
+    -q, --fetch,  Enter the search query to fetch videos from YouTube 
+    -mr,--maxResults Enter the maxResults of the search query. Default is 50.
+    -l, --login Login to YouTube using API KEY usage python bulk_fetcher.py -l YOUR_KEY
+
 
 Examples:
     python yt_to_shots.py -u "QSNa8U1yGrM" -s 50 -f 500 -m 100 
@@ -172,7 +178,8 @@ def download_one_video(args):
     print(f"Downloaded {folder_length} images from the video {title}.")
     
 def download_multiple_videos(args):
-    with open(args.txt, "r") as file:
+    file_path=args.txt if args.txt else f"search_results/{args.fetch}.txt"
+    with open(file_path, "r") as file:
         urls = file.readlines()
     for url in urls:
         args.url = url.strip()
@@ -184,17 +191,37 @@ def main(args):
         
     elif args.txt:
         download_multiple_videos(args)
+        
+    elif args.fetch:
+        print(f"Bulk fetching videos for query: {args.fetch} with maxResults: {args.maxResults}")
+        fetcher(args.fetch, args.maxResults)
+        download_multiple_videos(args)
+        
+    elif args.login:
+        print("Login to YouTu`be using API KEY")
+        with open(".env", "w") as file:
+            file.write(f"API_KEY={args.login}")
+        print("Login successful")
+        
+        
+    else:
+        print_help()
+        
+        
 
 if __name__ == "__main__":
     print_help()
     parser = argparse.ArgumentParser(description="Download YouTube videos")
     parser.add_argument("-u", "--url", help="Enter the URL/VideoID of the YouTube video")
-    parser.add_argument("-t","--txt" , help="Enter the path of the text file containing the list of URLs")
+    parser.add_argument("-t","--txt" , help="Enter the path of the text file containing the list of URLs" , default="search_results/urls.txt")
+    parser.add_argument("-q","--fetch", help="Enter the search query to fetch videos from YouTube", default="nature science cosmology 8k")
+    parser.add_argument("-mr","--maxResults", help="Enter the maxResults of the search query" , default=50, type=int)
     parser.add_argument("-o", "--output", help="Enter the output folder path to save the images in it. Default is the current folder.", default=os.getcwd())
     parser.add_argument("-f", "--frame", help="Enter the number of frames to skip each capture. Default is 50.", type=int, default=50)
     parser.add_argument("-m", "--max", help="Enter the maximum number of frames to capture. Default is 1000.", type=int, default=1000)
     parser.add_argument("-s", "--similar", help="Enter the similarity percentage of frames to remove. Default is 50.", type=int, default=50)
     parser.add_argument("-d", "--delete", help="Delete Downloaded video", action='store_true')
+    parser.add_argument("-l","--login",help="Login to YouTube using API KEY" , action='store_true')
 
     args = parser.parse_args()
     main(args)
