@@ -46,6 +46,10 @@ python yt_to_shots.py -u <URL/VideoID> [options]
 - `-m`, `--max`: Your cargo limit. How many frames to keep before you say "that's enough beauty for today". 📦
 - `-d`, `--delete`: Wanna erase the traces of your journey? Toggle this on! 🧹
 - `-s`, `--similar`: Set your tolerance for cosmic similarities. Sometimes, one moon is just enough! 🌖
+- `-t`, `--txt`: Enter the path of the text file containing the list of URLs or VideoIDs. 📄
+- `-q`, `--fetch`:  Enter the search query to fetch videos from YouTube
+- `-mr`,`--maxResults`: Enter the maxResults of the search query. Default is 50.
+- `-l`, `--login`: Login to YouTube using API KEY usage python bulk_fetcher.py -l YOUR_KEY
 
 ### Example Commands
 

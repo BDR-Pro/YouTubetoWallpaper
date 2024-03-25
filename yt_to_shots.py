@@ -71,7 +71,7 @@ Usage:
     python yt_to_shots.py <arguments>
 
 Arguments:
-    -u, --url     Enter the URL/VideoID of the YouTube video (required).
+    -u, --url     Enter the URL/VideoID of the YouTube video.
     -o, --output  Enter the output folder path to save the images in it. Default is the current folder.
     -f, --frame   Enter the number of frames to skip each capture. Default is 50.
     -m, --max     Enter the maximum number of frames to capture. Default is 1000.
@@ -79,8 +79,8 @@ Arguments:
     -s, --similar Enter the similarty percentage of frames to remove. Default is 50.
     -t, --txt     Enter the path of the text file containing the list of URLs 
     -q, --fetch,  Enter the search query to fetch videos from YouTube 
-    -mr,--maxResults Enter the maxResults of the search query. Default is 50.
-    -l, --login Login to YouTube using API KEY usage python bulk_fetcher.py -l YOUR_KEY
+    -mr,--maxResults Enter the maxResults of the search query.
+    -l, --login Login to YouTube using API KEY usage > -l YOUR_KEY
 
 
 Examples:
@@ -213,9 +213,9 @@ if __name__ == "__main__":
     print_help()
     parser = argparse.ArgumentParser(description="Download YouTube videos")
     parser.add_argument("-u", "--url", help="Enter the URL/VideoID of the YouTube video")
-    parser.add_argument("-t","--txt" , help="Enter the path of the text file containing the list of URLs" , default="search_results/urls.txt")
-    parser.add_argument("-q","--fetch", help="Enter the search query to fetch videos from YouTube", default="nature science cosmology 8k")
-    parser.add_argument("-mr","--maxResults", help="Enter the maxResults of the search query" , default=50, type=int)
+    parser.add_argument("-t","--txt" , help="Enter the path of the text file containing the list of URLs" )
+    parser.add_argument("-q","--fetch", help="Enter the search query to fetch videos from YouTube")
+    parser.add_argument("-mr","--maxResults", help="Enter the maxResults of the search query" , type=int)
     parser.add_argument("-o", "--output", help="Enter the output folder path to save the images in it. Default is the current folder.", default=os.getcwd())
     parser.add_argument("-f", "--frame", help="Enter the number of frames to skip each capture. Default is 50.", type=int, default=50)
     parser.add_argument("-m", "--max", help="Enter the maximum number of frames to capture. Default is 1000.", type=int, default=1000)
