@@ -3,30 +3,26 @@ import os
 import cv2
 from tqdm import tqdm
 from skimage.metrics import structural_similarity as ssim
-from langdetect import detect_langs
-import arabic_reshaper
-from bidi.algorithm import get_display
 from random import randint
 import uuid
 import yt_dlp
 from bulk_fetcher import main as fetcher
 
-def download_video_and_get_title(url, output_path='videos/video.mp4'):
+def download_video(url):
     """
     Download a video using yt-dlp and return its title.
 
     Parameters:
     - url (str): The URL of the video to download.
-    - output_path (str): The output path where the video will be saved.
 
     Returns:
-    - str: The title of the video.
-    """
+    - str: The path of the downloaded video.
 
+    """
     # Configuration for yt-dlp
     ydl_opts = {
-        'format': 'best',  # Download the best quality
-        'outtmpl': output_path,  # Set the output path
+        'format': 'bestvideo[height<=2160]+bestaudio/best[height<=2160]',  # Download the best quality
+        'outtmpl': os.path.join(f"C:\\Users\\{os.getlogin()}\\Videos", '%(title)s.%(ext)s'),  # Set the output path
         # Other options can be added here
     }
 
@@ -34,36 +30,9 @@ def download_video_and_get_title(url, output_path='videos/video.mp4'):
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         # Extract information from the URL, but don't download the video
         info_dict = ydl.extract_info(url, download=False)
-        # Retrieve the video title
-        video_title = info_dict.get('title', 'Unknown Title')
+        ydl.download([url])
 
-        # If you also want to download the video uncomment the next line
-        # ydl.download([url])
-
-    return fix_title(video_title)
-
-
-def fix_title(title):
-    """
-    Fix the title of a video by reshaping it and converting it to displayable characters and 
-    readable if it is arabic.
-
-    Parameters:
-    - title (str): The title of the video.
-
-    Returns:
-    - str: The fixed title of the video.
-    """
-
-    # Detect the language of the title
-    lang = detect_langs(title)[0].lang
-
-    # If the language is Arabic, reshape and convert the title
-    if lang == 'ar':
-        title = arabic_reshaper.reshape(title)
-        title = get_display(title)
-
-    return title.translate(str.maketrans('', '', '\\:/*?"<>|.'))
+    return ydl.prepare_filename(info_dict)
 
 def print_help():
     print('''
@@ -98,11 +67,10 @@ def download_youtube_video(video_url):
         video_url = f"https://www.youtube.com/watch?v={video_url}"
     
     print(f"Downloading YouTube video ..")
-    title = download_video_and_get_title(video_url)
+    path = download_video(video_url)
+    title = os.path.basename(path).split(".")[0]
     print(f"Download complete of {title}.")
-    path = os.mv("videos/video.mp4", f"videos/{title}.mp4")
-    print(f"Downloaded video path: {path}")
-    return (path, title)
+    return path
 
 def get_images(video_path, output_folder, frame_skip, title):
     print(f"Extracting frames from video: {video_path}")
@@ -166,7 +134,8 @@ def compare_images(image1, image2, SP):
 
 def download_one_video(args):
     print(f"Processing video: {args.url}")
-    path, title = download_youtube_video(args.url)
+    path = download_youtube_video(args.url)
+    title = os.path.basename(path).split(".")[0]
     images = get_images(path, args.output, args.frame, title)
     remove_similar_images(tuple(images), args.similar)
     folder_length = remove_extra_images(args.max, args.output, title)
